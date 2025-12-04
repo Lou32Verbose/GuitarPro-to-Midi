@@ -13,6 +13,7 @@ jobs:
         dotnet-platform: [linux-x64, win-x64, osx-x64, osx-arm64]
 
     steps:
+<<<<<<< HEAD
     - uses: actions/checkout@v3
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
@@ -22,6 +23,21 @@ jobs:
       run: dotnet publish -r ${{ matrix.dotnet-platform }} -p:PublishSingleFile=true --self-contained true
     - name: Upload artifact
       uses: actions/upload-artifact@v3
+=======
+    - uses: actions/checkout@v5
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: '9.0.x'
+    - name: Restore dotnet tools
+      run: dotnet tool restore
+    - name: Derive new project version from git tag
+      run: dotnet gitversion -updateprojectfiles
+    - name: Build self-contained binary
+      run: dotnet publish -r ${{ matrix.dotnet-platform }} -c Release
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+>>>>>>> aa4bcea1821df049da3655229e152bc9ce32697d
       with:
         name: artifact_${{ matrix.dotnet-platform }}
         path: |
@@ -38,7 +54,11 @@ jobs:
 
     steps:
       - name: Download Artifact
+<<<<<<< HEAD
         uses: actions/download-artifact@v3
+=======
+        uses: actions/download-artifact@v5
+>>>>>>> aa4bcea1821df049da3655229e152bc9ce32697d
         with:
           name: artifact_${{ matrix.dotnet-platform }}
           path: artifact
@@ -48,6 +68,10 @@ jobs:
       - name: Create zip archive
         run: zip -j guitarprotomidi_${{ matrix.dotnet-platform }}.zip ${{ steps.find_artifact.outputs.artifact_path }}
       - name: Upload release asset
+<<<<<<< HEAD
         uses: softprops/action-gh-release@v1
+=======
+        uses: softprops/action-gh-release@v2
+>>>>>>> aa4bcea1821df049da3655229e152bc9ce32697d
         with:
           files: guitarprotomidi_${{ matrix.dotnet-platform }}.zip
